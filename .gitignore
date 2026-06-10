@@ -1,0 +1,45 @@
+# Entorno virtual
+
+.venv/
+venv/
+
+# Python
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Base de datos
+
+db.sqlite3
+
+# Variables de entorno
+
+.env
+
+# Archivos de logs
+
+*.log
+
+# Archivos de VS Code
+
+.vscode/
+
+# Archivos de PyCharm
+
+.idea/
+
+# Archivos estáticos generados
+
+staticfiles/
+
+# Archivos del sistema
+
+.DS_Store
+Thumbs.db
+
+# Migraciones (opcional)
+
+# */migrations/*
+
+# !*/migrations/**init**.py
