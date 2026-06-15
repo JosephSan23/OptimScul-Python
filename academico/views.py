@@ -20,3 +20,14 @@ class ListaCursosView(ListView):
         context = super().get_context_data(**kwargs)
         context['curso'] = Curso.objects.get(pk=self.kwargs['curso_id'])
         return context
+    
+    
+class PanelMateriaView(TemplateView):
+    tamplate_name = 'academico/panel_materia.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context['curso'] = Curso.objects.get(pk=self.kwargs['curso_id'])
+        context['asignatura'] = Asignatura.objects.get(pk=self.kwargs['asignatura_id'])
+        
+        return context
