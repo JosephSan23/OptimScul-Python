@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptimScul - {% block title %}Dashboard{% endblock %}</title>
+    
+    <link rel="icon" type="image/png" href="{% static 'academico/img/logo.png' %}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="{% static 'academico/css/main-layout.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container blanco">
+                <img src="{% static 'academico/img/logo.png' %}" alt="Logo" class="logo-icon">
+                <span class="logo-text">OptimScul</span>
+            </div>
+            <button id="btn-toggle" class="toggle-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="nav-item">
+                    <a href="{% url 'academico:lista_cursos' %}" data-path="/academico/mis-cursos/">
+                        <i data-lucide="layout-dashboard"></i>
+                        <span class="link-name">Inicio</span>
+                    </a>
+                    <span class="tooltip">Inicio</span>
+                </li>
+                
+                <li class="nav-item has-submenu">
+                    <a href="#" data-path="/admin/usuarios">
+                        <i data-lucide="users"></i>
+                        <span class="link-name">Usuarios</span>
+                    </a>
+                    <span class="tooltip">Usuarios</span>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" data-path="/admin/cursos">
+                        <i data-lucide="clipboard-list"></i>
+                        <span class="link-name">Cursos</span>
+                    </a>
+                    <span class="tooltip">Cursos</span>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" data-path="/admin/reportes/estudiantes">
+                        <i data-lucide="bar-chart-3"></i>
+                        <span class="link-name">Reportes</span>
+                    </a>
+                    <span class="tooltip">Reportes</span>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'academico:lista_cursos' %}" data-path="/academico/mis-cursos/">
+                        <i class='bx bx-book-open'></i>
+                        <span class="link-name">Mis Cursos</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <div class="main-content">
+        <header class="main-header">
+            <div class="header-logo">
+                <img src="{% static 'academico/img/logo.png' %}" alt="Logo" class="logo-icon">
+                <span class="logo-text text-left">Optim<span class="logo-text text-right">Scul</span></span>    
+            </div>
+            <div class="search-bar">
+                <i data-lucide="search"></i>
+                <input type="text" placeholder="Buscar alumnos, cursos...">
+            </div>
+
+            <div class="header-right">
+                <div class="notifications">
+                    <i data-lucide="bell"></i>
+                </div>
+                <div class="user-info" id="user-menu-trigger">
+                    <div class="user-details">
+                        <span class="user-name">Carlos</span>
+                        <span class="user-role">Profesor</span>
+                    </div>
+                    <div class="avatar wrapper">
+                        <img src="{% static 'academico/img/cara.jpg' %}" alt="Carlos" class="avatar">
+                        <div class="status-indicator"></div>
+                    </div>
+
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="dropdown-header">
+                            <p>Carlos</p>
+                            <span>carlos@colegio.edu.co</span>
+                        </div>
+                        <hr>
+                        <ul class="dropdown-list">
+                            <li><i data-lucide="user"></i>Mi Perfil</li>
+                            <li class="role-switcher">
+                                <i data-lucide="repeat"></i>
+                                <div>
+                                    <p>Cambiar a:</p>
+                                    <span>Docente</span>
+                                </div>
+                            </li>
+                            <li class="logout-container">
+                                <form action="#" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-logout-item">
+                                        <i data-lucide="log-out"></i>
+                                        <span>Cerrar Sesion</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="container-fluid">
+            {% block content %}
+            <p>Cargando contenido...</p>
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="{% static 'academico/js/main-layout.js' %}"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            lucide.createIcons();
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
