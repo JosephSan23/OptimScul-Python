@@ -37,9 +37,10 @@ body {
 
 /* ── ÁREA DE CONTENIDO ── */
 .content-area {
-    margin-left: var(--sidebar-width);
+    padding: 2rem 2.5rem;
+    background: var(--gray-50);
     min-height: 100vh;
-    padding: calc(var(--header-height) + 2rem) 2.5rem 2.5rem;
+    font-family: 'Inter';
 }
 
 /* ── ENCABEZADO ── */
