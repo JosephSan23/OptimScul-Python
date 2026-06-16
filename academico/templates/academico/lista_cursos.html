@@ -1,0 +1,119 @@
+{% extends 'academico/main-layout.html' %}
+{% load static %}
+
+{% block title %}Mis Cursos | OptimScul{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'academico/css/lista_cursos.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="content-area">
+
+    <header class="page-header">
+        <h1 class="page-header__title">Bienvenido, Carlos</h1>
+        <p class="page-header__subtitle">Mis cursos asignados</p>
+    </header>
+
+    <ul class="courses-list">
+        {% for curso in cursos_asignados %}
+        <li class="course-card">
+            <div class="course-card__header">
+                <span class="course-card__type">{{ curso.tipo|title }}</span>
+                <h3 class="course-card__title">{{ curso.grado }}° Grado {{ curso.nombre_curso }}</h3>
+                
+                {% if curso.estado == 'Activo' or curso.estado == 'activo' %}
+                    <span class="course-card__badge course-card__badge--active">Activo</span>
+                {% else %}
+                    <span class="course-card__badge">{{ curso.estado|title }}</span>
+                {% endif %}
+            </div>
+            
+            <ul class="course-card__details">
+                <li class="course-card__detail">
+                    <i class="ti ti-users course-card__detail-icon" aria-hidden="true"></i>
+                    <span class="course-card__label">Capacidad</span>
+                    <span class="course-card__value">{{ curso.capacidad_maxima }} estudiantes</span>
+                </li>
+                <li class="course-card__detail">
+                    <i class="ti ti-file-text course-card__detail-icon" aria-hidden="true"></i>
+                    <span class="course-card__label">Descripción</span>
+                    <span class="course-card__value">
+                        {% if curso.descripcion %}{{ curso.descripcion }}{% else %}Sin descripción disponible.{% endif %}
+                    </span>
+                </li>
+            </ul>
+            
+            <div class="course-card__divider"></div>
+            
+            <div class="course-card__footer">
+                <button class="btn btn--primary" type="button"
+                    onclick="abrirModal('modal-{{ curso.id_curso }}')"
+                    aria-haspopup="dialog">
+                    Ver materias
+                </button>
+            </div>
+        </li>
+        {% empty %}
+        <p class="page-header__subtitle">No tienes cursos asignados actualmente.</p>
+        {% endfor %}
+    </ul>
+
+    {% for curso in cursos_asignados %}
+    <dialog id="modal-{{ curso.id_curso }}" class="modal" aria-labelledby="modal-{{ curso.id_curso }}-title">
+        <div class="modal__header">
+            <div>
+                <div class="modal__label">Materias asignadas</div>
+                <h2 class="modal__title" id="modal-{{ curso.id_curso }}-title">{{ curso.grado }}° Grado {{ curso.nombre_curso }}</h2>
+            </div>
+            <button class="modal__close" type="button"
+                onclick="cerrarModal('modal-{{ curso.id_curso }}')"
+                aria-label="Cerrar">
+                <i class="ti ti-x" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="modal__body">
+            <p class="modal__subtitle">Selecciona una materia para ir al panel</p>
+            <ul class="modal__subjects">
+
+                {% for asignacion in curso.materias_del_profesor %}
+                <li>
+                    <button class="subject-card" type="button"
+                        onclick="irAPanel('{{ curso.grado }}° {{ curso.nombre_curso }}', '{{ asignacion.id_asignatura.nombre_asignatura }}')">
+                        
+                        <div class="subject-card__img">
+                            <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=300&q=80" alt="{{ asignacion.id_asignatura.nombre_asignatura }}">
+                            <div class="subject-card__img-overlay" style="background: #1e3a5f;"></div>
+                            
+                            <span class="subject-card__name">{{ asignacion.id_asignatura.nombre_asignatura }}</span>
+                        </div>
+                        
+                        <div class="subject-card__footer">
+                            <span class="subject-card__action">Ir al panel</span>
+                            <i class="ti ti-arrow-right subject-card__arrow" aria-hidden="true"></i>
+                        </div>
+                    </button>
+                </li>
+                {% empty %}
+                <p class="modal__subtitle" style="color: #999;">No tienes materias asignadas para este curso.</p>
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        <div class="modal__footer">
+            <button class="btn btn--secondary" type="button"
+                onclick="cerrarModal('modal-{{ curso.id_curso }}')">
+                Cerrar
+            </button>
+        </div>
+    </dialog>
+    {% endfor %}
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'academico/js/lista_cursos.js' %}"></script>
+{% endblock %}
