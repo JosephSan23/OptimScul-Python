@@ -3,18 +3,23 @@ from .models import ProfesorCursoAsignatura, Curso, Asignatura
 
 # Create your views here.
 class ListaCursosView(ListView):
-    model = ProfesorCursoAsignatura
+    model = Curso
     template_name = 'academico/lista_cursos.html'  
     context_object_name = 'cursos_asignados'
 
     def get_queryset(self):
-        profesor_id = 1 
+        profesor_id = 21 
         
-        asignaciones = ProfesorCursoAsignatura.objects.filter(id_profesor=profesor_id)
-        
+        # Agregamos select_related para precargar la información de la asignatura adjunta
+        asignaciones = ProfesorCursoAsignatura.objects.filter(id_profesor=profesor_id).select_related('id_asignatura')
         # distinct elimina duplicados
         curso_ids = asignaciones.values_list('id_curso', flat=True).distinct()
-        return Curso.objects.filter(id_curso__in=curso_ids)
+        
+        cursos = Curso.objects.filter(id_curso__in=curso_ids)
+        for curso in cursos:
+            curso.materias_del_profesor = asignaciones.filter(id_curso=curso.id_curso)
+            
+        return cursos
 
 class ListaMateriasCursoView(ListView):
     model = ProfesorCursoAsignatura
