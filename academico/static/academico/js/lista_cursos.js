@@ -6,8 +6,10 @@ function abrirModal(id) {
         document.getElementById(id).close();
     }
 
-    function irAPanel(curso, materia) {
-        console.log(`Navegar al panel de ${materia} — ${curso}`);
+    function irAPanel(idCurso, idAsignatura) {
+        console.log(`Redirigiendo al Panel del curso ${idCurso} y materia ${idAsignatura}`);
+
+        window.location.href = `/academico/mis-cursos/${idCurso}/materias/${idAsignatura}/panel/`;
     }
 
     document.querySelectorAll('.modal').forEach(modal => {

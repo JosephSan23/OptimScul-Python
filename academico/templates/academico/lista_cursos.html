@@ -80,7 +80,7 @@
                 {% for asignacion in curso.materias_del_profesor %}
                 <li>
                     <button class="subject-card" type="button"
-                        onclick="irAPanel('{{ curso.grado }}° {{ curso.nombre_curso }}', '{{ asignacion.id_asignatura.nombre_asignatura }}')">
+                        onclick="irAPanel('{{ curso.id_curso }}', '{{ asignacion.id_asignatura.id_asignatura }}')">
                         
                         <div class="subject-card__img">
                             <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=300&q=80" alt="{{ asignacion.id_asignatura.nombre_asignatura }}">
