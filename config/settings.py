@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Silenciar el warning de ForeignKey con primary_key=True para tablas intermedias
+SILENCED_SYSTEM_CHECKS = ['fields.W342']
+
 
 # Application definition
 
@@ -79,10 +82,11 @@ DATABASES = {
         'NAME': 'optimal_school',
         'USER': 'root',
         'PASSWORD': '',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '3306'
     }
 }
+
 
 
 # Password validation
