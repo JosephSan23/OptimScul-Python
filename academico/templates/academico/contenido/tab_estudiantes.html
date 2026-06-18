@@ -1,0 +1,43 @@
+<section id="sec-alumnos" class="section" role="tabpanel">
+
+    <div class="alumnos-head">
+        <div class="search-box">
+            <i class="ti ti-search" aria-hidden="true"></i>
+            <input type="text" id="search-alumno" placeholder="Buscar por nombre o documento..." oninput="filtrarAlumnos(this.value)">
+        </div>
+        <span class="alumno-count" id="alumno-count">{{ estudiantes|length }} estudiantes</span>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre completo</th>
+                    <th>Documento</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="alumnos-tbody">
+                {% for estudiante in estudiantes %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="td-nombre">
+                            {{ estudiante.id_estudiante.primer_nombre }} 
+                            {{ estudiante.id_estudiante.primer_apellido }}
+                        </td>
+                        <td class="td-doc">{{ estudiante.id_estudiante.documento }}</td>
+                        <td>
+                            <span class="estado-badge entregado">
+                                {% if estudiante.id_estudiante.estado == 'activo' %}Activo{% else %}Inactivo{% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">No hay alumnos registrados en este curso.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
