@@ -16,7 +16,7 @@ class Colegio(models.Model):
 
     class Meta:
         # Managed: False le dice a django que ya tengo creada una bd entonces que no la modifique.
-        managed: False
+        managed = False
         db_table = 'colegio'
         
     def __str__(self):
