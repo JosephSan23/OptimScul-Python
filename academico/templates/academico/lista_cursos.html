@@ -79,8 +79,9 @@
 
                 {% for asignacion in curso.materias_del_profesor %}
                 <li>
-                    <button class="subject-card" type="button"
-                        onclick="irAPanel('{{ curso.id_curso }}', '{{ asignacion.id_asignatura.id_asignatura }}')">
+                    <a class="subject-card" 
+                    href="{% url 'academico:panel_materia' curso_id=curso.id_curso asignatura_id=asignacion.id_asignatura.id_asignatura %}"
+                    style="text-decoration: none; display: block;">
                         
                         <div class="subject-card__img">
                             <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=300&q=80" alt="{{ asignacion.id_asignatura.nombre_asignatura }}">
@@ -93,7 +94,7 @@
                             <span class="subject-card__action">Ir al panel</span>
                             <i class="ti ti-arrow-right subject-card__arrow" aria-hidden="true"></i>
                         </div>
-                    </button>
+                    </a>
                 </li>
                 {% empty %}
                 <p class="modal__subtitle" style="color: #999;">No tienes materias asignadas para este curso.</p>
