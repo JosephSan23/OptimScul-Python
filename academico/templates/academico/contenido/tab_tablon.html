@@ -1,0 +1,38 @@
+<section id="sec-tablon" class="section active" role="tabpanel">
+
+    <!-- Caja para crear publicaciones -->
+    <div class="anuncio-box">
+        <textarea id="anuncio-input" placeholder="Escribe un aviso, recordatorio o mensaje para el grupo..."></textarea>
+        <div class="anuncio-footer">
+            <button class="btn btn--primary" type="button" onclick="publicarAviso()">
+                <i class="ti ti-send" aria-hidden="true"></i> Publicar
+            </button>
+        </div>
+    </div>
+
+    <span class="section-label">Publicaciones recientes</span>
+
+    <!-- Lista de publicaciones del curso -->
+    <div class="aviso-list" id="aviso-list">
+
+        {% for aviso in publicaciones %}
+            <div class="aviso-card">
+                <div class="aviso-avatar">
+                    {{ aviso.autor.nombre|slice:":1" }}{% if aviso.autor.apellido %}{{ aviso.autor.apellido|slice:":1" }}{% endif %}
+                </div>
+                <div>
+                    <span class="aviso-author">
+                        {{ aviso.autor.nombre }} {{ aviso.autor.apellido }}
+                        <span class="aviso-date">{{ aviso.fecha_publicacion|timesince }}</span>
+                    </span>
+                    <p class="aviso-text">{{ aviso.contenido }}</p>
+                </div>
+            </div>
+        {% empty %}
+            <div class="aviso-card" style="justify-content: center; opacity: 0.7;">
+                <p class="aviso-text">No hay publicaciones recientes en esta asignatura.</p>
+            </div>
+        {% endfor %}
+
+    </div>
+</section>
