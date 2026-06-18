@@ -35,7 +35,6 @@ body {
     line-height: 1.6;
 }
 
-/* ── ÁREA DE CONTENIDO ── */
 .content-area {
     padding: 2rem 2.5rem;
     background: var(--gray-50);
@@ -43,7 +42,6 @@ body {
     font-family: 'Inter';
 }
 
-/* ── ENCABEZADO ── */
 .page-header { margin-bottom: 2rem; }
 
 .page-header__title {
