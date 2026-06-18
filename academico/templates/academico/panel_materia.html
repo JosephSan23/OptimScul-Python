@@ -1,0 +1,54 @@
+{% extends 'academico/main-layout.html' %}
+{% load static %}
+
+{% block title %}Panel de Materia | OptimScul{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'academico/css/panel_materia.css' %}">
+{% endblock %}
+{% block content %}
+<main class="content-area">
+
+    <div class="topbar">
+        <button class="btn-back btn" type="button" onclick="history.back()">
+            <i class="ti ti-arrow-left" aria-hidden="true"></i> Volver a mis cursos
+        </button>
+    </div>
+
+    <div class="panel">
+
+        <div class="tabs-wrap" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true"
+                aria-controls="sec-tablon" onclick="cambiarTab(this, 'sec-tablon')">
+                <i class="ti ti-speakerphone" aria-hidden="true"></i> Tablón
+            </button>
+            <button class="tab" role="tab" aria-selected="false"
+                aria-controls="sec-trabajo" onclick="cambiarTab(this, 'sec-trabajo')">
+                <i class="ti ti-clipboard-list" aria-hidden="true"></i> Trabajo en clase
+            </button>
+            <button class="tab" role="tab" aria-selected="false"
+                aria-controls="sec-calificaciones" onclick="cambiarTab(this, 'sec-calificaciones')">
+                <i class="ti ti-chart-bar" aria-hidden="true"></i> Calificaciones
+            </button>
+            <button class="tab" role="tab" aria-selected="false"
+                aria-controls="sec-alumnos" onclick="cambiarTab(this, 'sec-alumnos')">
+                <i class="ti ti-users" aria-hidden="true"></i> Alumnos
+            </button>
+        </div>
+
+        <div class="panel-body">
+
+            {% include 'academico/contenido/tab_tablon.html' %}
+
+            {% include 'academico/contenido/tab_trabajo.html' %}
+
+            {% include 'academico/contenido/tab_notas.html' %}
+
+            {% include 'academico/contenido/tab_estudiantes.html' %}
+
+        </div></div></main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'academico/js/panel_materia.js' %}"></script>
+{% endblock %}
