@@ -1,0 +1,116 @@
+<section id="sec-trabajo" class="section" role="tabpanel">
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-card__label">
+                <i class="ti ti-clipboard-list" aria-hidden="true"></i> Actividades creadas
+            </div>
+            <div class="stat-card__value">{{ asignaciones|length }}</div>
+            <div class="stat-card__sub">en este periodo</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__label">
+                <i class="ti ti-clock-exclamation" aria-hidden="true"></i> Por calificar
+            </div>
+            <div class="stat-card__value orange">-</div>
+            <div class="stat-card__sub">entregas sin nota</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card__label">
+                <i class="ti ti-user-x" aria-hidden="true"></i> Sin entregar
+            </div>
+            <div class="stat-card__value">-</div>
+            <div class="stat-card__sub">alumnos pendientes</div>
+        </div>
+    </div>
+
+    <div class="section-head">
+        <span class="section-label">Actividades del periodo</span>
+        <button class="btn btn--primary" type="button" onclick="abrirModal('modal-actividad')">
+            <i class="ti ti-plus" aria-hidden="true"></i> Nueva actividad
+        </button>
+    </div>
+
+    <div class="actividades-list" id="actividades-list">
+
+        {% for trabajo in asignaciones %}
+            <div class="actividad-card">
+                <div class="actividad-left">
+                    <div class="actividad-icon">
+                        <i class="ti ti-file-text" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="actividad-name">{{ trabajo.nombre }}</div>
+                        <div class="actividad-meta">
+                            <i class="ti ti-calendar" aria-hidden="true"></i> 
+                            {% if trabajo.fecha_limite %}Vence {{ trabajo.fecha_limite|date:"j M · Y" }}{% else %}Sin fecha límite{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="actividad-right">
+                    <span class="pill green">- / {{ estudiantes|length }} entregaron</span>
+                    <button class="btn btn--ghost" type="button" onclick="verEntregas('{{ trabajo.id_actividad }}')">
+                        Ver entregas
+                    </button>
+                    <!-- ↓ Agregar estos dos botones -->
+                    <button class="btn btn--ghost btn--icon" type="button" 
+                        data-id="{{ trabajo.id_actividad }}"
+                        data-nombre="{{ trabajo.nombre }}"
+                        data-descripcion="{{ trabajo.descripcion }}"
+                        data-fecha="{{ trabajo.fecha_limite|date:'Y-m-d' }}"
+                        onclick="editarActividad(this)">
+                        <i class="ti ti-pencil" aria-hidden="true"></i>
+                    </button>
+                    <button class="btn btn--ghost btn--icon" type="button"
+                        data-id="{{ trabajo.id_actividad }}"
+                        onclick="eliminarActividad(this)">
+                        <i class="ti ti-trash" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        {% empty %}
+            <div class="actividad-card" style="justify-content: center; opacity: 0.7;">
+                <p class="actividad-meta">Aún no se han creado actividades en esta asignatura.</p>
+            </div>
+        {% endfor %}
+
+    </div>
+</section>
+
+<dialog id="modal-actividad" class="modal" aria-labelledby="modal-act-title">
+    <div class="modal__header">
+        <div>
+            <div class="modal__label">Trabajo en clase</div>
+            <h2 class="modal__title" id="modal-act-title">Nueva actividad</h2>
+        </div>
+        <button class="modal__close" type="button" onclick="cerrarModal('modal-actividad')" aria-label="Cerrar">
+            <i class="ti ti-x" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="modal__body">
+        <div class="form-group">
+            <label class="form-label" for="act-nombre">Nombre de la actividad</label>
+            <input class="form-input" id="act-nombre" type="text" placeholder="Ej: Taller de Cinemática">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="act-descripcion">Descripción</label>
+            <textarea class="form-textarea" id="act-descripcion" placeholder="Instrucciones o descripción de la actividad..."></textarea>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label" for="act-fecha">Fecha límite</label>
+                <input class="form-input" id="act-fecha" type="date">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="act-valor">Valor (puntos)</label>
+                <input class="form-input" id="act-valor" type="number" min="0" max="10" placeholder="Ej: 5.0">
+            </div>
+        </div>
+    </div>
+    <div class="modal__footer">
+        <button class="btn btn--ghost" type="button" onclick="cerrarModal('modal-actividad')">Cancelar</button>
+        <button class="btn btn--primary" type="button" onclick="guardarActividad()">
+            <i class="ti ti-check" aria-hidden="true"></i> Crear actividad
+        </button>
+    </div>
+</dialog>
