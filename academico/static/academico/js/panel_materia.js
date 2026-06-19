@@ -1,3 +1,7 @@
+let modoEdicion = false;
+let actividadEditandoId = null;
+let cardEditando = null;
+
 function cambiarTab(tabEl, seccionId) {
     document.querySelectorAll('.tab').forEach(t => {
         t.classList.remove('active');
@@ -67,61 +71,79 @@ function guardarActividad() {
 
     if (!nombre) { alert('El nombre de la actividad es obligatorio.'); return; }
 
-    // Toma el curso_id y asignatura_id desde la URL actual
     const urlParts = window.location.pathname.split('/');
     const cursoId = urlParts[3];
     const asignaturaId = urlParts[5];
 
-    fetch(`/academico/mis-cursos/${cursoId}/materias/${asignaturaId}/actividades/crear/`, {
+    const url = modoEdicion
+        ? `/academico/mis-cursos/${cursoId}/materias/${asignaturaId}/actividades/${actividadEditandoId}/editar/`
+        : `/academico/mis-cursos/${cursoId}/materias/${asignaturaId}/actividades/crear/`;
+
+    fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            nombre: nombre,
-            descripcion: descripcion,
-            fecha_limite: fecha || null,
-        })
+        body: JSON.stringify({ nombre, descripcion, fecha_limite: fecha || null })
     })
     .then(res => res.json())
     .then(data => {
         if (!data.ok) { alert('Error: ' + data.error); return; }
 
-        // Solo ahora agregamos la card al DOM
-        const lista = document.getElementById('actividades-list');
         const fechaTexto = data.fecha_limite
             ? new Date(data.fecha_limite + 'T00:00:00').toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' })
             : 'Sin fecha límite';
 
-        const card = document.createElement('div');
-        card.className = 'actividad-card';
-        card.innerHTML = `
-            <div class="actividad-left">
-                <div class="actividad-icon"><i class="ti ti-file-text" aria-hidden="true"></i></div>
-                <div>
-                    <div class="actividad-name">${data.nombre}</div>
-                    <div class="actividad-meta">
-                        <i class="ti ti-calendar" aria-hidden="true"></i> Vence ${fechaTexto}
+        if (modoEdicion && cardEditando) {
+            // Actualiza la card existente en el DOM
+            cardEditando.querySelector('.actividad-name').textContent = data.nombre;
+            cardEditando.querySelector('.actividad-meta').innerHTML = `<i class="ti ti-calendar"></i> Vence ${fechaTexto}`;
+            // Actualiza los data attributes del botón editar
+            const btnEditar = cardEditando.querySelector('[onclick="editarActividad(this)"]');
+            if (btnEditar) {
+                btnEditar.dataset.nombre = data.nombre;
+                btnEditar.dataset.descripcion = descripcion;
+                btnEditar.dataset.fecha = data.fecha_limite ?? '';
+            }
+            const btnEliminar = cardEditando.querySelector('[onclick="eliminarActividad(this)"]');
+            if (btnEliminar) {
+                btnEliminar.dataset.nombre = data.nombre;
+            }
+        } else {
+            // Crea nueva card
+            const lista = document.getElementById('actividades-list');
+            const card = document.createElement('div');
+            card.className = 'actividad-card';
+            card.innerHTML = `
+                <div class="actividad-left">
+                    <div class="actividad-icon"><i class="ti ti-file-text" aria-hidden="true"></i></div>
+                    <div>
+                        <div class="actividad-name">${data.nombre}</div>
+                        <div class="actividad-meta">
+                            <i class="ti ti-calendar" aria-hidden="true"></i> Vence ${fechaTexto}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="actividad-right">
-                <span class="pill green">0 / -- entregaron</span>
-                <button class="btn btn--ghost" type="button" onclick="verEntregas('${data.id}')">Ver entregas</button>
-                <button class="btn btn--ghost" type="button" onclick="editarActividad('${data.id}', '${data.nombre}', '', '${data.fecha_limite ?? ''}')">
-                    <i class="ti ti-pencil"></i>
-                </button>
-                <button class="btn btn--ghost" type="button" onclick="eliminarActividad('${data.id}')">
-                    <i class="ti ti-trash"></i>
-                </button>
-            </div>`;
+                <div class="actividad-right">
+                    <span class="pill green">0 / -- entregaron</span>
+                    <button class="btn btn--ghost" type="button" onclick="verEntregas('${data.id}')">Ver entregas</button>
+                    <button class="btn btn--ghost btn--icon" type="button"
+                        data-id="${data.id}"
+                        data-nombre="${data.nombre}"
+                        data-descripcion="${descripcion}"
+                        data-fecha="${data.fecha_limite ?? ''}"
+                        onclick="editarActividad(this)">
+                        <i class="ti ti-pencil"></i>
+                    </button>
+                    <button class="btn btn--ghost btn--icon" type="button"
+                        data-id="${data.id}"
+                        data-nombre="${data.nombre}"
+                        onclick="eliminarActividad(this)">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                </div>`;
+            lista.appendChild(card);
+        }
 
-        lista.appendChild(card);
         cerrarModal('modal-actividad');
-
-        // Limpiar campos
-        document.getElementById('act-nombre').value = '';
-        document.getElementById('act-descripcion').value = '';
-        document.getElementById('act-fecha').value = '';
-        document.getElementById('act-valor').value = '';
     })
     .catch(err => alert('Error de conexión: ' + err));
 }
@@ -163,3 +185,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+function abrirModalCrear() {
+    modoEdicion = false;
+    actividadEditandoId = null;
+    cardEditando = null;
+
+    document.getElementById('modal-act-title').textContent = 'Nueva actividad';
+    document.getElementById('act-nombre').value = '';
+    document.getElementById('act-descripcion').value = '';
+    document.getElementById('act-fecha').value = '';
+    document.getElementById('act-valor').value = '';
+
+    abrirModal('modal-actividad');
+}
+
+function editarActividad(btn) {
+    modoEdicion = true;
+    actividadEditandoId = btn.dataset.id;
+    cardEditando = btn.closest('.actividad-card');
+
+    document.getElementById('modal-act-title').textContent = 'Editar actividad';
+    document.getElementById('act-nombre').value = btn.dataset.nombre;
+    document.getElementById('act-descripcion').value = btn.dataset.descripcion;
+    document.getElementById('act-fecha').value = btn.dataset.fecha;
+
+    abrirModal('modal-actividad');
+}
+
+function eliminarActividad(btn) {
+    const id = btn.dataset.id;
+    const nombre = btn.dataset.nombre;
+    const card = btn.closest('.actividad-card');
+
+    document.getElementById('nombre-actividad-eliminar').textContent = `"${nombre}"`;
+
+    const btnConfirmar = document.getElementById('btn-confirmar-eliminar');
+    // Clonar para limpiar listeners anteriores
+    const btnNuevo = btnConfirmar.cloneNode(true);
+    btnConfirmar.parentNode.replaceChild(btnNuevo, btnConfirmar);
+
+    btnNuevo.addEventListener('click', () => {
+        const urlParts = window.location.pathname.split('/');
+        const cursoId = urlParts[3];
+        const asignaturaId = urlParts[5];
+
+        fetch(`/academico/mis-cursos/${cursoId}/materias/${asignaturaId}/actividades/${id}/eliminar/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (!data.ok) { alert('Error: ' + data.error); return; }
+            card.remove();
+            cerrarModal('modal-confirmar-eliminar');
+        })
+        .catch(err => alert('Error de conexión: ' + err));
+    });
+
+    abrirModal('modal-confirmar-eliminar');
+}
