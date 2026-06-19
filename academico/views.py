@@ -147,3 +147,39 @@ class CrearActividadView(View):
             })
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+        
+        
+
+@method_decorator(csrf_exempt, name='dispatch')
+class EditarActividadView(View):
+    def post(self, request, curso_id, asignatura_id, actividad_id):
+        try:
+            data = json.loads(request.body)
+            actividad = Actividad.objects.get(pk=actividad_id)
+            actividad.nombre = data.get('nombre', actividad.nombre)
+            actividad.descripcion = data.get('descripcion', actividad.descripcion)
+            actividad.fecha_limite = data.get('fecha_limite') or None
+            actividad.save()
+            return JsonResponse({
+                'ok': True,
+                'id': actividad.id_actividad,
+                'nombre': actividad.nombre,
+                'fecha_limite': str(actividad.fecha_limite) if actividad.fecha_limite else None
+            })
+        except Actividad.DoesNotExist:
+            return JsonResponse({'error': 'Actividad no encontrada'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
+        
+@method_decorator(csrf_exempt, name='dispatch')
+class EliminarActividadView(View):
+    def post(self, request, curso_id, asignatura_id, actividad_id):
+        try:
+            actividad = Actividad.objects.get(pk=actividad_id)
+            actividad.delete()
+            return JsonResponse({'ok': True})
+        except Actividad.DoesNotExist:
+            return JsonResponse({'error': 'Actividad no encontrada'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
