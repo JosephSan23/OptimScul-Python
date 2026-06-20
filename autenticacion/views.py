@@ -26,7 +26,7 @@ class LoginView(View):
                     'error': 'Debes ingresar tu usuario/correo y contraseña.'
                 })
 
-            # Busca por username O por correo, lo que el usuario haya escrito
+            # Valida por username O por correo
             usuario = Usuario.objects.filter(
                 Q(username=identificador) | Q(correo=identificador)
             ).first()
