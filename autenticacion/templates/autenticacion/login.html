@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de sesión</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{% static 'academico/img/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="brand-panel">
+            <div class="brand-content">
+                <span class="welcome-tag">Bienvenido a la red</span>
+                <h1>Transformando el futuro de la educación.</h1>
+                <p>Únete a las instituciones que ya estan optimizando sus procesos de tecnologia de vanguardia.</p>
+                <div class="brand-decoration"></div>
+            </div>
+        </div>
+
+        <div class="form-panel">
+            <form action="{% url 'autenticacion:login' %}" class="login-form" method="POST">
+                {% csrf_token %}
+
+                <div class="header-login">
+                    <a href="/" class="btn-back">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                        </svg>
+                        <span>Volver</span>
+                    </a>
+                    <h2 class="logo-title">
+                        <img src="{% static 'img/logo.png' %}" class="logo-icon">
+                        <span class="text-left">Optim<span class="text-right">Scul</span></span>
+                    </h2>
+                </div>
+
+                {% if error %}
+                    <div class="message-login error">
+                        <i class='bx bx-error-circle'></i>
+                        <span>{{ error }}</span>
+                    </div>
+                {% endif %}
+
+                {% if logout %}
+                    <div class="message-login success">
+                        <span>Has cerrado sesión correctamente.</span>
+                    </div>
+                {% endif %}
+
+                <h2>Ingresa</h2>
+                <p class="welcome-text">Introduce tus credenciales para acceder.</p>
+
+                <div class="input-group">
+                    <label for="user">Correo o Usuario</label>
+                    <input type="text" id="user" name="identificador" placeholder="ejemplo@dominio.com" required>
+                </div>
+
+                <div class="input-group">
+                    <div class="password-header">
+                        <label for="pass">Contraseña</label>
+                        <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <input type="password" id="pass" name="password" placeholder="********" required>
+                </div>
+
+                <button type="submit" class="btn-log">Iniciar Sesión</button>
+
+                <p class="visitor-text">¿No formas parte de una institucion?
+                    <a href="#">Contáctanos o postula a un estudiante aquí</a>
+                </p>
+
+            </form>
+        </div>
+    </div>
+</body>
+</html>
