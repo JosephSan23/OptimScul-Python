@@ -552,6 +552,9 @@ tbody td {
     border-color: var(--color-orange);
 }
 
+.btn--danger { background: #e53e3e; color: #fff; }
+.btn--danger:hover { background: #c53030; }
+
 /* ══════════════════════════════
     MODAL NUEVA ACTIVIDAD
 ══════════════════════════════ */
