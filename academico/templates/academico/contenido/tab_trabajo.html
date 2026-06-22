@@ -26,7 +26,7 @@
 
     <div class="section-head">
         <span class="section-label">Actividades del periodo</span>
-        <button class="btn btn--primary" type="button" onclick="abrirModal('modal-actividad')">
+        <button class="btn btn--primary" type="button" onclick="abrirModalCrear('modal-actividad')">
             <i class="ti ti-plus" aria-hidden="true"></i> Nueva actividad
         </button>
     </div>
@@ -52,7 +52,6 @@
                     <button class="btn btn--ghost" type="button" onclick="verEntregas('{{ trabajo.id_actividad }}')">
                         Ver entregas
                     </button>
-                    <!-- ↓ Agregar estos dos botones -->
                     <button class="btn btn--ghost btn--icon" type="button" 
                         data-id="{{ trabajo.id_actividad }}"
                         data-nombre="{{ trabajo.nombre }}"
@@ -63,6 +62,7 @@
                     </button>
                     <button class="btn btn--ghost btn--icon" type="button"
                         data-id="{{ trabajo.id_actividad }}"
+                        data-nombre="{{ trabajo.nombre }}"
                         onclick="eliminarActividad(this)">
                         <i class="ti ti-trash" aria-hidden="true"></i>
                     </button>
@@ -111,6 +111,26 @@
         <button class="btn btn--ghost" type="button" onclick="cerrarModal('modal-actividad')">Cancelar</button>
         <button class="btn btn--primary" type="button" onclick="guardarActividad()">
             <i class="ti ti-check" aria-hidden="true"></i> Crear actividad
+        </button>
+    </div>
+</dialog>
+<dialog id="modal-confirmar-eliminar" class="modal" aria-labelledby="modal-elim-title">
+    <div class="modal__header">
+        <div>
+            <div class="modal__label">Confirmar acción</div>
+            <h2 class="modal__title" id="modal-elim-title">Eliminar actividad</h2>
+        </div>
+        <button class="modal__close" type="button" onclick="cerrarModal('modal-confirmar-eliminar')" aria-label="Cerrar">
+            <i class="ti ti-x" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="modal__body">
+        <p>¿Estás seguro de que quieres eliminar <strong id="nombre-actividad-eliminar"></strong>? Esta acción no se puede deshacer.</p>
+    </div>
+    <div class="modal__footer">
+        <button class="btn btn--ghost" type="button" onclick="cerrarModal('modal-confirmar-eliminar')">Cancelar</button>
+        <button class="btn btn--danger" type="button" id="btn-confirmar-eliminar">
+            <i class="ti ti-trash" aria-hidden="true"></i> Eliminar
         </button>
     </div>
 </dialog>
