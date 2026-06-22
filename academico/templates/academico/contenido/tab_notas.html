@@ -1,5 +1,4 @@
 <section id="sec-calificaciones" class="section" role="tabpanel">
-
     <div class="notas-head">
         <span class="section-label">Planilla de Calificaciones</span>
         <div class="notas-actions">
@@ -8,7 +7,6 @@
             </button>
         </div>
     </div>
-
     <div class="table-wrap">
         <table class="table-notas">
             <thead>
@@ -27,16 +25,18 @@
             <tbody>
                 {% for fila in planilla_alumnos %}
                 <tr>
-                    <td class="pin-col">{{ fila.estudiante.id_estudiante.get_full_name }}</td> 
-                    
+                    <td class="pin-col">
+                        {{ fila.estudiante.id_estudiante.primer_nombre }} {{ fila.estudiante.id_estudiante.primer_apellido }}
+                    </td>
+
                     {% for act in fila.actividades %}
                     <td class="text-center">
                         <input 
                             type="number" 
                             class="input-nota" 
                             step="0.1" 
-                            min="0.0" 
-                            max="5.0"
+                            min="{{ nota_minima }}" 
+                            max="{{ nota_maxima }}"
                             placeholder="-.-"
                             data-estudiante="{{ fila.estudiante.id_estudiante_id }}"
                             data-actividad="{{ act.actividad_id }}"
@@ -54,5 +54,4 @@
             </tbody>
         </table>
     </div>
-
 </section>
