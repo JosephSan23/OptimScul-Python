@@ -21,28 +21,77 @@ function cambiarTab(tabEl, seccionId) {
 function publicarAviso() {
     const input = document.getElementById('anuncio-input');
     if (!input) return;
-    
+
     const texto = input.value.trim();
     if (!texto) return;
 
-    const lista = document.getElementById('aviso-list');
-    const card = document.createElement('div');
-    card.className = 'aviso-card';
-    card.innerHTML = `
-        <div class="aviso-avatar">U</div>
-        <div>
-            <span class="aviso-author">Usuario Activo
-                <span class="aviso-date">ahora mismo</span>
-            </span>
-            <p class="aviso-text">${texto}</p>
-        </div>`;
-    
-    if (lista.firstChild) {
-        lista.insertBefore(card, lista.firstChild);
-    } else {
-        lista.appendChild(card);
-    }
-    input.value = '';
+    const urlParts = window.location.pathname.split('/');
+    const cursoId = urlParts[3];
+    const asignaturaId = urlParts[5];
+
+    fetch(`/academico/mis-cursos/${cursoId}/materias/${asignaturaId}/avisos/crear/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contenido: texto })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.ok) { alert('Error: ' + data.error); return; }
+
+        const lista = document.getElementById('aviso-list');
+        const inicial1 = data.autor_nombre ? data.autor_nombre[0] : '';
+        const inicial2 = data.autor_apellido ? data.autor_apellido[0] : '';
+
+        const card = document.createElement('div');
+        card.className = 'aviso-card';
+        card.innerHTML = `
+            <div class="aviso-avatar">${inicial1}${inicial2}</div>
+            <div>
+                <span class="aviso-author">${data.autor_nombre} ${data.autor_apellido}
+                    <span class="aviso-date">ahora mismo</span>
+                </span>
+                <p class="aviso-text">${data.contenido}</p>
+            </div>`;
+
+        if (lista.firstChild) {
+            lista.insertBefore(card, lista.firstChild);
+        } else {
+            lista.appendChild(card);
+        }
+        input.value = '';
+    })
+    .catch(err => alert('Error de conexión: ' + err));
+}
+
+function actualizarNotaRapida(inputEl) {
+    const estudianteId = inputEl.dataset.estudiante;
+    const actividadId = inputEl.dataset.actividad;
+    const nuevaNota = inputEl.value;
+
+    const urlParts = window.location.pathname.split('/');
+    const cursoId = urlParts[3];
+    const asignaturaId = urlParts[5];
+
+    fetch(`/academico/mis-cursos/${cursoId}/materias/${asignaturaId}/calificaciones/guardar/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            estudiante_id: estudianteId,
+            actividad_id: actividadId,
+            nota: nuevaNota
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.ok) {
+            alert('Error al guardar la nota: ' + data.error);
+            return;
+        }
+        // Pequeño feedback visual opcional
+        inputEl.style.borderColor = '#48bb78';
+        setTimeout(() => { inputEl.style.borderColor = ''; }, 800);
+    })
+    .catch(err => alert('Error de conexión: ' + err));
 }
 
 function verEntregas(idActividad) {
@@ -170,22 +219,6 @@ function filtrarAlumnos(query) {
     }
 }
 
-function actualizarNotaRapida(inputEl) {
-    const estudianteId = inputEl.dataset.estudiante;
-    const actividadId = inputEl.dataset.actividad;
-    const nuevaNota = inputEl.value;
-
-    console.log(`Guardando nota de estudiante ${estudianteId} en actividad ${actividadId}: ${nuevaNota}`);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('click', e => {
-            if (e.target === modal) modal.close();
-        });
-    });
-});
-
 function abrirModalCrear() {
     modoEdicion = false;
     actividadEditandoId = null;
@@ -244,4 +277,12 @@ function eliminarActividad(btn) {
     });
 
     abrirModal('modal-confirmar-eliminar');
+}
+
+function exportarNotas() {
+    const urlParts = window.location.pathname.split('/');
+    const cursoId = urlParts[3];
+    const asignaturaId = urlParts[5];
+
+    window.location.href = `/academico/mis-cursos/${cursoId}/materias/${asignaturaId}/calificaciones/exportar/`;
 }
