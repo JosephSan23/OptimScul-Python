@@ -18,11 +18,11 @@
         {% for aviso in publicaciones %}
             <div class="aviso-card">
                 <div class="aviso-avatar">
-                    {{ aviso.autor.nombre|slice:":1" }}{% if aviso.autor.apellido %}{{ aviso.autor.apellido|slice:":1" }}{% endif %}
+                    {{ aviso.autor.primer_nombre|slice:":1" }}{% if aviso.autor.primer_apellido %}{{ aviso.autor.primer_apellido|slice:":1" }}{% endif %}
                 </div>
                 <div>
                     <span class="aviso-author">
-                        {{ aviso.autor.nombre }} {{ aviso.autor.apellido }}
+                        {{ aviso.autor.primer_nombre }} {{ aviso.autor.primer_apellido }}
                         <span class="aviso-date">{{ aviso.fecha_publicacion|timesince }}</span>
                     </span>
                     <p class="aviso-text">{{ aviso.contenido }}</p>
