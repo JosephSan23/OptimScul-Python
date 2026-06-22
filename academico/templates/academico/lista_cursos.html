@@ -20,7 +20,7 @@
         <li class="course-card">
             <div class="course-card__header">
                 <span class="course-card__type">{{ curso.tipo|title }}</span>
-                <h3 class="course-card__title">{{ curso.grado }}° Grado {{ curso.nombre_curso }}</h3>
+                <h3 class="course-card__title">Grado {{ curso.grado }}°  {{ curso.nombre_curso }}</h3>
                 
                 {% if curso.estado == 'Activo' or curso.estado == 'activo' %}
                     <span class="course-card__badge course-card__badge--active">Activo</span>
