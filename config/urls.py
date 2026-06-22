@@ -22,4 +22,6 @@ urlpatterns = [
     
     # Conectar las rutas del modulo
     path('academico/', include('academico.urls')),
+    
+    path('', include('autenticacion.urls')),
 ]

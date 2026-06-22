@@ -53,7 +53,6 @@ class LoginView(View):
             return redirect('academico:lista_cursos')
 
         except Exception as e:
-            print(f"DEBUG: Error en LoginView - {e}")  # útil para debug, lo quitas después
             return render(request, self.template_name, {
                 'error': 'Ocurrió un error al iniciar sesión. Intenta de nuevo.'
             })
